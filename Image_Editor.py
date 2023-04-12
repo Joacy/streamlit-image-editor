@@ -1,5 +1,6 @@
 import streamlit as st
 from PIL import Image
+from PIL.ImageFilter import *
 
 st.set_page_config(
   page_title="Image Editor",
@@ -30,10 +31,34 @@ if image:
 
     st.markdown("<h2 style='text-align: center;'>Resizing</h2>", unsafe_allow_html=True)
     width = st.number_input("Width", value=img.width)
-    height = st.number_input("Height", value=img.height)
+    new_height = width * img.height // img.width
+    height = st.number_input("Height", value=new_height)
 
     st.markdown("<h2 style='text-align: center;'>Rotation</h2>", unsafe_allow_html=True)
     degree = st.number_input("Degree")
 
     st.markdown("<h2 style='text-align: center;'>Filters</h2>", unsafe_allow_html=True)
-    filter = st.selectbox("Filter", options=["None", "BLUR", "DETAIL", "EMBOSS", "SMOOTH"])
+    filters = st.selectbox("Filter", options=["None", "BLUR", "DETAIL", "EMBOSS", "SMOOTH"])
+   
+    s_btn = st.button("Submit")
+    if s_btn:
+        col1, col2 = st.columns(2)
+
+        col1.markdown("<h6 style='text-align: center;'>Original</h6>", unsafe_allow_html=True)
+        col1.image(img)
+        edited = img.resize((width, height)).rotate(degree)
+        
+        filtered = edited
+
+        if filters != "None":
+            if filters == "BLUR":
+                filtered = edited.filter(BLUR)
+            elif filters == "DETAIL":
+                filtered = edited.filter(DETAIL)
+            elif filters == "EMBOSS":
+                filtered = edited.filter(EMBOSS)
+            elif filters == "SMOOTH":
+                filtered = edited.filter(SMOOTH)
+
+        col2.markdown("<h6 style='text-align: center;'>Edited</h6>", unsafe_allow_html=True)
+        col2.image(filtered)
