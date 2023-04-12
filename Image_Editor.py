@@ -13,12 +13,27 @@ st.markdown("---")
 
 image = st.file_uploader("Selecione a imagem", type=["jpg", "png", "jpeg"])
 
+info = st.empty()
+
 size = st.empty()
 mode = st.empty()
 format_ = st.empty()
 
 if image:
     img = Image.open(image)
+
+    info.markdown("<h2 style='text-align: center;'>Information</h2>", unsafe_allow_html=True)
+
     size.markdown(f"<p>Size: {img.size}</p>", unsafe_allow_html=True)
     mode.markdown(f"<p>Mode: {img.mode}</p>", unsafe_allow_html=True)
     format_.markdown(f"<p>Format: {img.format}</p>", unsafe_allow_html=True)
+
+    st.markdown("<h2 style='text-align: center;'>Resizing</h2>", unsafe_allow_html=True)
+    width = st.number_input("Width", value=img.width)
+    height = st.number_input("Height", value=img.height)
+
+    st.markdown("<h2 style='text-align: center;'>Rotation</h2>", unsafe_allow_html=True)
+    degree = st.number_input("Degree")
+
+    st.markdown("<h2 style='text-align: center;'>Filters</h2>", unsafe_allow_html=True)
+    filter = st.selectbox("Filter", options=["None", "BLUR", "DETAIL", "EMBOSS", "SMOOTH"])
